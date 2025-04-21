@@ -23,7 +23,7 @@ export class SkripsiController {
         .json(toAPIResponse(400, false, responses.errorCreateItem, error));
     }
   };
-  static getSkripsi = async (req: Request, res: Response) => {
+  static getAllSkripsi = async (req: Request, res: Response) => {
     try {
       const skripsi = await SkripsiService.getSkripsi();
       if (skripsi.length === 0) {

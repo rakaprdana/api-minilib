@@ -1,7 +1,7 @@
 import { model, Schema } from "mongoose";
 import { IReport } from "../interfaces/report";
 
-const skripsiSchema = new Schema(
+const skripsiSchema = new Schema<IReport>(
   {
     nim: {
       type: String,
@@ -32,7 +32,10 @@ const skripsiSchema = new Schema(
     examiners: [{ type: String, required: true, trim: true }],
     is_deleted: { type: Boolean, default: false },
   },
-  { timestamps: true, versionKey: false }
+  {
+    timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
+    versionKey: false,
+  }
 );
 
 export const Skripsi = model<IReport>("Skripsi", skripsiSchema);

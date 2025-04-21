@@ -7,6 +7,7 @@ export const responses = {
   errorCreateItem: "An error occurred adding new Item",
   errorUpdateItem: "An error occurred updating the Item",
   errorDeleteItem: "An error occurred deleting the Item",
+  errorGetItem: "An error occurred Getting the Item",
   serverError: "A server error occurred",
   successSignUp: "Sign up was successful",
   successSignIn: "Sign in was successful",
