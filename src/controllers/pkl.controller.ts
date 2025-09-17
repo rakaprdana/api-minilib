@@ -18,19 +18,15 @@ export class PKLController {
   };
   static getAllPKL = async (req: Request, res: Response) => {
     try {
-      const page = parseInt((req.query.page as string) || "0", 10);
-      const limit = parseInt((req.query.limit as string) || "0", 10);
-      const pkl = await PklService.getPKL(page, limit);
-      if (pkl.length === 0) {
-        res
-          .status(404)
-          .json(toAPIResponse(404, false, responses.errorNotFound));
+      const page = parseInt((req.query.page as string) || "1", 1);
+      const limit = parseInt((req.query.limit as string) || "10", 10);
+      const result = await PklService.getPKL(page, limit);
+      if (!result) {
+        res.status(400).json(toAPIResponse(400, false, responses.errorGetItem));
       }
       res
         .status(200)
-        .json(
-          toAPIResponse(200, true, responses.successGetItem, pkl, pkl.length)
-        );
+        .json(toAPIResponse(200, true, responses.successGetItem, result));
     } catch (error) {
       res
         .status(400)

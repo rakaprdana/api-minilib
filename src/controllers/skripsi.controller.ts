@@ -2,6 +2,7 @@ import { Request, response, Response } from "express";
 import { SkripsiService } from "../services/skripsi.service";
 import { toAPIResponse } from "../interfaces/apiresponse";
 import { responses } from "../constants";
+import { Skripsi } from "../models/skripsi.model";
 
 export class SkripsiController {
   static addSkripsi = async (req: Request, res: Response) => {
@@ -25,23 +26,15 @@ export class SkripsiController {
   };
   static getAllSkripsi = async (req: Request, res: Response) => {
     try {
-      const skripsi = await SkripsiService.getSkripsi();
-      if (skripsi.length === 0) {
-        res
-          .status(404)
-          .json(toAPIResponse(404, false, responses.errorNotFound, skripsi));
+      const page = parseInt((req.query.page as string) || "1", 10);
+      const limit = parseInt((req.query.limit as string) || "10", 10);
+      const result = await SkripsiService.getSkripsi(page, limit);
+      if (!result) {
+        res.status(400).json(toAPIResponse(400, false, responses.errorGetItem));
       }
       res
         .status(200)
-        .json(
-          toAPIResponse(
-            200,
-            true,
-            responses.successGetItem,
-            skripsi,
-            skripsi.length
-          )
-        );
+        .json(toAPIResponse(200, true, responses.successGetItem, result));
     } catch (error) {
       res
         .status(500)

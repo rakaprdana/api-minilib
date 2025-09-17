@@ -1,5 +1,6 @@
 import { IReport } from "../interfaces/report";
 import { PKLReport } from "../models/pkl.model";
+import { paginate } from "../utils/generatePagination";
 
 export class PklService {
   static createPKL = async (data: IReport) => {
@@ -7,11 +8,7 @@ export class PklService {
     return await item.save();
   };
   static getPKL = async (page: number, limit: number) => {
-    const skip = (page - 1) * limit;
-    const items = await PKLReport.find({ is_deleted: false })
-      .skip(skip)
-      .limit(limit);
-    return items;
+    return paginate(PKLReport, { is_deleted: false }, page, limit);
   };
   static getPKLById = async (id: string) => {
     const item = await PKLReport.findById(id);
