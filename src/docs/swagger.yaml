@@ -1,0 +1,370 @@
+openapi: 3.0.0
+info:
+  title: API Documentation
+  version: 1.0.0
+  description: Dokumentasi API untuk User, PKL, dan Skripsi
+
+servers:
+  - url: http://localhost:8080
+    description: Local server
+
+tags:
+  - name: User
+    description: Endpoint untuk autentikasi user
+  - name: PKL
+    description: Endpoint untuk data PKL
+  - name: Skripsi
+    description: Endpoint untuk data Skripsi
+
+paths:
+  /user/signup:
+    post:
+      summary: Registrasi user baru
+      tags: [User]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: sample@gma1l.com
+                password:
+                  type: string
+                  example: secret123
+      responses:
+        "201":
+          description: User berhasil dibuat
+        "400":
+          description: Request tidak valid
+
+  /user/signin:
+    post:
+      summary: Login user
+      tags: [User]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: johndoe
+                password:
+                  type: string
+                  example: secret123
+      responses:
+        "200":
+          description: Berhasil login (token dikembalikan)
+        "401":
+          description: Username/password salah
+
+  /pkl:
+    post:
+      summary: Tambah data PKL baru
+      tags: [PKL]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PKL"
+      responses:
+        "201":
+          description: PKL berhasil ditambahkan
+    get:
+      summary: Ambil semua data PKL
+      tags: [PKL]
+      responses:
+        "200":
+          description: List PKL dengan pagination
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PKLGetAllResponse"
+
+  /pkl/{id}:
+    get:
+      summary: Ambil data PKL berdasarkan ID
+      tags: [PKL]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Detail PKL
+        "404":
+          description: Data tidak ditemukan
+    put:
+      summary: Update data PKL berdasarkan ID
+      tags: [PKL]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PKL"
+      responses:
+        "200":
+          description: PKL berhasil diupdate
+    delete:
+      summary: Hapus data PKL berdasarkan ID
+      tags: [PKL]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: PKL berhasil dihapus
+
+  /skripsi:
+    post:
+      summary: Tambah data Skripsi baru
+      tags: [Skripsi]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Skripsi"
+      responses:
+        "201":
+          description: Skripsi berhasil ditambahkan
+    get:
+      summary: Ambil semua data Skripsi
+      tags: [Skripsi]
+      responses:
+        "200":
+          description: List Skripsi dengan pagination
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SkripsiGetAllResponse"
+
+  /skripsi/{id}:
+    get:
+      summary: Ambil data Skripsi berdasarkan ID
+      tags: [Skripsi]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Detail Skripsi
+        "404":
+          description: Data tidak ditemukan
+    put:
+      summary: Update data Skripsi berdasarkan ID
+      tags: [Skripsi]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Skripsi"
+      responses:
+        "200":
+          description: Skripsi berhasil diupdate
+    delete:
+      summary: Hapus data Skripsi berdasarkan ID
+      tags: [Skripsi]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Skripsi berhasil dihapus
+
+components:
+  schemas:
+    BaseResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Item has been found
+
+    Pagination:
+      type: object
+      properties:
+        totalItems:
+          type: integer
+          example: 8
+        totalPages:
+          type: integer
+          example: 1
+        currentPage:
+          type: integer
+          nullable: true
+          example: 1
+        pageSize:
+          type: integer
+          example: 10
+
+    PKLItem:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "680645b3b645cb5f410af780"
+        nim:
+          type: string
+          example: "123456789"
+        author:
+          type: string
+          example: "Raka"
+        title:
+          type: string
+          example: "Optimalisasi Sistem Rekayasa di Perusahaan XYZ"
+        location:
+          type: object
+          properties:
+            cupboard:
+              type: string
+              example: "Rak 2"
+            drawer:
+              type: string
+              example: "Laci 4"
+        advisors:
+          type: array
+          items:
+            type: string
+        examiners:
+          type: array
+          items:
+            type: string
+        is_deleted:
+          type: boolean
+          example: false
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    SkripsiItem:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "68032c621c9dbdcfe3b5ebaa"
+        nim:
+          type: string
+          example: "202312345"
+        author:
+          type: string
+          example: "Raka"
+        title:
+          type: string
+          example: "Implementasi Teknologi AI dalam Pendidikan"
+        location:
+          type: object
+          properties:
+            cupboard:
+              type: string
+              example: "Rak Dokumen"
+            drawer:
+              type: string
+              example: "Laci Arsip"
+        advisors:
+          type: array
+          items:
+            type: string
+        examiners:
+          type: array
+          items:
+            type: string
+        is_deleted:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    PKLGetAllResponse:
+      allOf:
+        - $ref: "#/components/schemas/BaseResponse"
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/PKLItem"
+                totalItems:
+                  type: integer
+                  example: 8
+                totalPages:
+                  type: integer
+                  example: 1
+                currentPage:
+                  type: integer
+                  nullable: true
+                  example: null
+                pageSize:
+                  type: integer
+                  example: 10
+
+    SkripsiGetAllResponse:
+      allOf:
+        - $ref: "#/components/schemas/BaseResponse"
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/SkripsiItem"
+                totalItems:
+                  type: integer
+                  example: 2
+                totalPages:
+                  type: integer
+                  example: 1
+                currentPage:
+                  type: integer
+                  example: 1
+                pageSize:
+                  type: integer
+                  example: 10
